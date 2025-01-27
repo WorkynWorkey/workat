@@ -1,0 +1,39 @@
+local HttpService = game:GetService("HttpService")
+
+while true do
+    wait(120)
+
+    local player = game.Players.LocalPlayer
+    local username = player.Name
+
+    local balanceText = player.PlayerGui.BucksPurchaseApp.Frame.Header.InsetSpace.Balance.Text
+    local number = string.match(balanceText, "%d+,%d+") or "0"
+    local totalbucks = number:gsub(",", "")
+
+    local stars = player.PlayerGui.AltCurrencyIndicatorApp.CurrencyIndicator.Container.Amount.Text
+
+    -- Формируем URL
+    local url = "https://temesssss.pythonanywhere.com/nick:" .. username .. "/bucks:" .. totalbucks .. "/potions:1/eventcoin:" .. stars .. "/"
+
+    -- Функция для отправки GET-запроса
+    local function sendGetRequest(url)
+        local success, response = pcall(function()
+            return http_request({
+                Url = url,
+                Method = 'GET', -- Изменен на GET
+                Headers = {
+                    ['Content-Type'] = 'application/json'
+                },
+            })
+        end)
+    
+        if success then
+            print("Response received:")
+            print(response.Body) 
+        else
+            warn("Request failed:", response)
+        end
+    end
+    
+    sendGetRequest(url)
+end
